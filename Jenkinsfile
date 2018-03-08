@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  tools {
+      maven 'mvn_3' 
+  }
   stages {
     stage('Build') {
       parallel {
@@ -11,6 +14,7 @@ pipeline {
             
           }
           steps {
+            sh 'mvn --version'
             echo 'Build Project'
             sleep 30
           }
