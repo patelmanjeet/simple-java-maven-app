@@ -4,12 +4,24 @@ pipeline {
     stage('Build') {
       parallel {
         stage('Build Backend') {
+          agent {
+            node {
+              label 'java'
+            }
+            
+          }
           steps {
             echo 'Build Project'
             sleep 30
           }
         }
         stage('Build UI') {
+          agent {
+            node {
+              label 'node'
+            }
+            
+          }
           steps {
             echo 'Build UI'
             sleep 30
