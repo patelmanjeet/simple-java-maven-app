@@ -3,59 +3,27 @@ pipeline {
   tools {
       maven 'mvn_3' 
   }
-  stages {
-    stage('Build') {
-      parallel {
-        stage('Build Backend') {
-          agent {
-            node {
-              label 'java'
-            }
-            
-          }
+  
+   stages {
+      stage('Build') {
           steps {
-            sh 'mvn --version'
-            echo 'Build Project'
-            sleep 30
+              sh 'mvn -B -DskipTests clean package'
           }
-        }
-        stage('Build UI') {
-          agent {
-            node {
-              label 'node'
-            }
-            
-          }
-          steps {
-            echo 'Build UI'
-            sleep 30
-          }
-        }
       }
-    }
-    stage('Test') {
-      parallel {
-        stage('Test Backend') {
+      stage('Test') {
           steps {
-            echo 'Running Test'
+              sh 'mvn test'
           }
-        }
-        stage('Test UI') {
-          steps {
-            sleep 30
+          post {
+              always {
+                  junit 'target/surefire-reports/*.xml'
+              }
           }
-        }
-        stage('Test Both') {
-          steps {
-            sleep 45
-          }
-        }
       }
-    }
-    stage('Deploy') {
-      steps {
-        echo 'Deploy To Server'
+      stage('Deliver') {
+          steps {
+              echo 'Deploy To Server'
+          }
       }
-    }
   }
 }
